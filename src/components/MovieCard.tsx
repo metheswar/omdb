@@ -11,7 +11,7 @@ interface MovieCardProps {
 
 export function MovieCard({ movie }: MovieCardProps) {
     return (
-        <Card className="hover:shadow-lg transition-shadow duration-300 dark:bg-gray-900 bg-white rounded-md overflow-hidden">
+        <Card className="hover:shadow-lg transition-shadow duration-300 bg-gray-900  rounded-md overflow-hidden">
             <Link href={`/movie/${movie.imdbID}`} aria-label={`View details for ${movie.Title}`}>
                 <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700">
                     {movie.Poster && movie.Poster !== 'N/A' ? (
@@ -30,8 +30,8 @@ export function MovieCard({ movie }: MovieCardProps) {
                     )}
                 </div>
                 <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{movie.Title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <h3 className="text-lg font-semibold text-gray-900 text-white">{movie.Title}</h3>
+                    <p className="text-sm text-gray-600 text-white">
                         {movie.Type.charAt(0).toUpperCase() + movie.Type.slice(1)} &bull; {movie.Year}
                     </p>
                 </CardContent>
