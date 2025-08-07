@@ -1,13 +1,17 @@
+import ClientCloseButton from '@/components/close';
 import { fetchMovieById } from '../../../lib/omdb';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
 
 interface MoviePageProps {
     params: Promise<{
         id: string;
     }>;
 }
+
+
 
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
     const { id } = await params;
@@ -31,6 +35,7 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
     };
 }
 
+// Server Component - keeps SSR benefits
 export default async function MoviePage({ params }: MoviePageProps) {
     const { id } = await params;
     const movie = await fetchMovieById(id);
@@ -49,22 +54,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
     return (
         <main className="min-h-screen bg-gray-900 text-gray-100 p-6 max-w-5xl mx-auto">
             <div className="flex justify-end mb-4">
-                <Link
-                    href="/"
-                    aria-label="Close movie details and go back to home"
-                    className="text-gray-400 hover:text-gray-200 transition"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </Link>
+                <ClientCloseButton />
             </div>
             <h1 className="text-4xl font-bold mb-4">{movie.Title}</h1>
             <div className="flex flex-col md:flex-row gap-6">
