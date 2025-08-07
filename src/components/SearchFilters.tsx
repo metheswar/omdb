@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
@@ -9,50 +9,36 @@ export function SearchFilters() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [localSearch, setLocalSearch] = useState(searchParams.get('search') || 'Avengers');
-    const [type, setType] = useState(searchParams.get('type') || 'all');
-    const [year, setYear] = useState(searchParams.get('year') || '');
-
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            updateUrlParams(localSearch, type, year);
-        }, 500);
-        return () => clearTimeout(handler);
-    }, [localSearch, type, year]);
-
-    function updateUrlParams(search: string, type: string, year: string) {
+    const handleSubmit = (formData: FormData) => {
         const params = new URLSearchParams();
+
+        const search = formData.get('search') as string;
+        const type = formData.get('type') as string;
+        const year = formData.get('year') as string;
 
         if (search) params.set('search', search);
         if (type && type !== 'all') params.set('type', type);
         if (year) params.set('year', year);
-
         params.set('page', '1');
 
-        const queryString = params.toString();
-        router.push(`/?${queryString}`);
-    }
+        router.push(`/?${params.toString()}`, { scroll: false });
+    };
 
     return (
         <form
+            action={handleSubmit}
             className="flex flex-col sm:flex-row gap-4 items-center w-full max-w-4xl mx-auto p-4"
-            onSubmit={(e) => e.preventDefault()}
-            role="search"
-            aria-label="Search movies and series"
         >
             <Input
+                name="search"
                 type="search"
                 placeholder="Search movies or series..."
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                aria-label="Search movies or series"
+                defaultValue={searchParams.get('search') || 'Avengers'}
                 className="flex-grow"
+                onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e.currentTarget.form?.formData)}
             />
-            <Select
-                value={type}
-                onValueChange={(value: string) => setType(value)}
-                aria-label="Filter by type"
-            >
+
+            <Select name="type" defaultValue={searchParams.get('type') || 'all'}>
                 <SelectTrigger className="w-40">
                     <SelectValue placeholder="All Types" />
                 </SelectTrigger>
@@ -62,16 +48,18 @@ export function SearchFilters() {
                     <SelectItem value="series">Series</SelectItem>
                 </SelectContent>
             </Select>
+
             <Input
+                name="year"
                 type="number"
                 placeholder="Year"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                aria-label="Filter by year"
+                defaultValue={searchParams.get('year') || ''}
                 min={1900}
                 max={2100}
                 className="w-24"
             />
+
+            <Button type="submit">Search</Button>
         </form>
     );
 }
