@@ -6,12 +6,12 @@ import { Pagination } from '../components/Pagination';
 import { Metadata } from 'next';
 
 interface HomePageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     type?: 'movie' | 'series';
     year?: string;
     page?: string;
-  };
+  }>;
 }
 
 const RESULTS_PER_PAGE = 10;
@@ -22,10 +22,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const search = searchParams.search || 'Avengers';
-  const type = searchParams.type || '';
-  const year = searchParams.year || '';
-  const page = parseInt(searchParams.page || '1', 10);
+  const { search = 'Avengers', type = '', year = '', page = '1' } = await searchParams;
+  const pageNumber = parseInt(page, 10);
 
   let movies: MovieSearchResult[] = [];
   let totalResults = 0;
@@ -33,7 +31,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   if (search) {
     try {
-      const data = await fetchMovies(search, type as 'movie' | 'series' | undefined, year, page);
+      const data = await fetchMovies(search, type as 'movie' | 'series' | undefined, year, pageNumber);
       if (data.Response === 'True') {
         movies = data.Search;
         totalResults = Number(data.totalResults);
@@ -59,10 +57,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         ))}
       </div>
       <Pagination
-        currentPage={page}
+        currentPage={pageNumber}
         totalResults={totalResults}
         resultsPerPage={RESULTS_PER_PAGE}
-        basePath="/"
       />
     </main>
   );

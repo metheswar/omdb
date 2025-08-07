@@ -4,13 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface MoviePageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
-    const movie = await fetchMovieById(params.id);
+    const { id } = await params;
+    const movie = await fetchMovieById(id);
 
     if (movie.Response === 'False') {
         return {
@@ -31,7 +32,8 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
 }
 
 export default async function MoviePage({ params }: MoviePageProps) {
-    const movie = await fetchMovieById(params.id);
+    const { id } = await params;
+    const movie = await fetchMovieById(id);
 
     if (movie.Response === 'False') {
         return (
