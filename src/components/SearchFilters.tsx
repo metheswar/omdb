@@ -122,7 +122,7 @@ export function SearchFilters() {
                 onChange={(e) => handleYearChange(e.target.value)}
                 min={1900}
                 max={2100}
-                className="w-24"
+                className="w-24 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
             />
         </div>
     );
