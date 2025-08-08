@@ -24,10 +24,10 @@ export function Pagination({ currentPage, totalResults, resultsPerPage }: Pagina
     };
 
     const getVisiblePages = (isMobile: boolean = false): (number | string)[] => {
-        const delta = isMobile ? 1 : 2; // Reduce visible pages on mobile
+        const delta = isMobile ? 1 : 2;
         const range: (number | string)[] = [];
 
-        const maxVisible = isMobile ? 3 : 7; // Fewer pages on mobile
+        const maxVisible = isMobile ? 3 : 7;
 
         if (totalPages <= maxVisible) {
             for (let i = 1; i <= totalPages; i++) {
@@ -37,7 +37,6 @@ export function Pagination({ currentPage, totalResults, resultsPerPage }: Pagina
         }
 
         if (isMobile) {
-            // Mobile: Show current page and neighbors only
             const start = Math.max(1, currentPage - 1);
             const end = Math.min(totalPages, currentPage + 1);
 
@@ -47,7 +46,6 @@ export function Pagination({ currentPage, totalResults, resultsPerPage }: Pagina
             }
             if (end < totalPages) range.push('...', totalPages);
         } else {
-            // Desktop: Original logic
             range.push(1);
             const start = Math.max(2, currentPage - delta);
             const end = Math.min(totalPages - 1, currentPage + delta);
@@ -65,7 +63,6 @@ export function Pagination({ currentPage, totalResults, resultsPerPage }: Pagina
 
     return (
         <nav aria-label="Pagination" className="flex justify-center my-4 px-2">
-            {/* Mobile Layout */}
             <div className="flex items-center space-x-1 sm:hidden">
                 <Link href={createPageLink(currentPage - 1)} passHref legacyBehavior>
                     <Button
