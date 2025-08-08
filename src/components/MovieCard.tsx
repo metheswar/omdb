@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { MovieSearchResult } from '../types/movie';
 import { Card, CardContent, CardFooter } from './ui/card';
 
@@ -10,9 +11,19 @@ interface MovieCardProps {
 }
 
 export function MovieCard({ movie }: MovieCardProps) {
+    const searchParams = useSearchParams();
+
+    const createMovieLink = () => {
+        const params = new URLSearchParams(searchParams.toString());
+        return `/movie/${movie.imdbID}?${params.toString()}`;
+    };
+
     return (
-        <Card className="hover:shadow-lg transition-shadow duration-300 bg-gray-900  rounded-md overflow-hidden">
-            <Link href={`/movie/${movie.imdbID}`} aria-label={`View details for ${movie.Title}`}>
+        <Card className="hover:shadow-lg transition-shadow duration-300 bg-gray-900 rounded-md overflow-hidden">
+            <Link
+                href={createMovieLink()}
+                aria-label={`View details for ${movie.Title}`}
+            >
                 <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700">
                     {movie.Poster && movie.Poster !== 'N/A' ? (
                         <Image

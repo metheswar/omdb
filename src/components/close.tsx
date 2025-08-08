@@ -1,23 +1,22 @@
-
 'use client';
-import { useRouter } from 'next/navigation';
 
-export default function ClientCloseButton() {
+import { useRouter, useSearchParams } from 'next/navigation';
 
+export default function SmartCloseButton() {
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const handleClose = () => {
         if (typeof window !== 'undefined') {
-            const referrer = document.referrer;
             const hasHistory = window.history.length > 1;
+            const currentSearchParams = searchParams.toString();
 
-            if (hasHistory && referrer && referrer.includes(window.location.origin)) {
+            if (currentSearchParams && hasHistory) {
                 router.back();
             } else {
-                router.push('/');
+                const homeUrl = currentSearchParams ? `/?${currentSearchParams}` : '/';
+                router.push(homeUrl);
             }
-        } else {
-            router.push('/');
         }
     };
 
