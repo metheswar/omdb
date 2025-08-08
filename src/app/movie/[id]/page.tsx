@@ -35,7 +35,6 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
     };
 }
 
-// Server Component - keeps SSR benefits
 export default async function MoviePage({ params }: MoviePageProps) {
     const { id } = await params;
     const movie = await fetchMovieById(id);
